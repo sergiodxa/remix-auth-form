@@ -1,5 +1,5 @@
 {
-  "name": "remix-auth-strategy-template",
+  "name": "remix-auth-form",
   "version": "0.0.0",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",

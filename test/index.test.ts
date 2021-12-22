@@ -1,7 +1,7 @@
 import { createCookieSessionStorage } from "@remix-run/server-runtime";
-import { MyStrategy } from "../src";
+import { FormStrategy, FormStrategyVerifyParams } from "../src";
 
-describe(MyStrategy, () => {
+describe(FormStrategy, () => {
   let verify = jest.fn();
   // You will probably need a sessionStorage to test the strategy.
   let sessionStorage = createCookieSessionStorage({
@@ -13,9 +13,43 @@ describe(MyStrategy, () => {
   });
 
   test("should have the name of the strategy", () => {
-    let strategy = new MyStrategy({ something: "You may need" }, verify);
-    expect(strategy.name).toBe("change-me");
+    let strategy = new FormStrategy(verify);
+    expect(strategy.name).toBe("form");
   });
 
-  test.todo("Write more tests to check everything works as expected");
+  test("should pass to the verify callback a FormData object", async () => {
+    let body = new FormData();
+    body.set("email", "test@example.com");
+
+    let request = new Request("", { body, method: "POST" });
+
+    let strategy = new FormStrategy(verify);
+
+    await strategy.authenticate(request, sessionStorage, {
+      sessionKey: "user",
+    });
+
+    expect(verify).toBeCalledWith({ form: body });
+  });
+
+  test("should return what the verify callback returned", async () => {
+    verify.mockImplementationOnce(
+      async ({ form }: FormStrategyVerifyParams) => {
+        return form.get("email");
+      }
+    );
+
+    let body = new FormData();
+    body.set("email", "test@example.com");
+
+    let request = new Request("", { body, method: "POST" });
+
+    let strategy = new FormStrategy<string>(verify);
+
+    let user = await strategy.authenticate(request, sessionStorage, {
+      sessionKey: "user",
+    });
+
+    expect(user).toBe("test@example.com");
+  });
 });

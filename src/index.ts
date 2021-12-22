@@ -1,49 +1,37 @@
 import { SessionStorage } from "@remix-run/server-runtime";
-import {
-  AuthenticateOptions,
-  Strategy,
-  StrategyVerifyCallback,
-} from "remix-auth";
+import { AuthenticateOptions, Strategy } from "remix-auth";
 
-/**
- * This interface declares what configuration the strategy needs from the
- * developer to correctly work.
- */
-export interface MyStrategyOptions {
-  something: "You may need";
+export interface FormStrategyVerifyParams {
+  /**
+   * A FormData object with the content of the form used to trigger the
+   * authentication.
+   *
+   * Here you can read any input value using the FormData API.
+   */
+  form: FormData;
 }
 
-/**
- * This interface declares what the developer will receive from the strategy
- * to verify the user identity in their system.
- */
-export interface MyStrategyVerifyParams {
-  something: "Dev may need";
-}
-
-export class MyStrategy<User> extends Strategy<User, MyStrategyVerifyParams> {
-  name = "change-me";
-
-  constructor(
-    options: MyStrategyOptions,
-    verify: StrategyVerifyCallback<User, MyStrategyVerifyParams>
-  ) {
-    super(verify);
-    // do something with the options here
-  }
+export class FormStrategy<User> extends Strategy<
+  User,
+  FormStrategyVerifyParams
+> {
+  name = "form";
 
   async authenticate(
     request: Request,
     sessionStorage: SessionStorage,
     options: AuthenticateOptions
   ): Promise<User> {
-    return await this.failure(
-      "Implement me!",
-      request,
-      sessionStorage,
-      options
-    );
-    // Uncomment me to do a success response
-    // this.success({} as User, request, sessionStorage, options);
+    let form = await request.formData();
+
+    let user: User;
+    try {
+      user = await this.verify({ form });
+    } catch (error) {
+      let message = (error as Error).message;
+      return await this.failure(message, request, sessionStorage, options);
+    }
+
+    return this.success(user, request, sessionStorage, options);
   }
 }
