@@ -13,7 +13,7 @@ export interface FormStrategyVerifyParams {
    * An object of arbitrary for route loaders and actions provided by the
    * server's `getLoadContext()` function.
    */
-  context: AppLoadContext;
+  context?: AppLoadContext;
 }
 
 export class FormStrategy<User> extends Strategy<
