@@ -52,4 +52,22 @@ describe(FormStrategy, () => {
 
     expect(user).toBe("test@example.com");
   });
+
+  test("should pass the context to the verify callback", async () => {
+    let body = new FormData();
+    body.set("email", "test@example.com");
+
+    let request = new Request("", { body, method: "POST" });
+
+    let context = { test: "it works!" };
+
+    let strategy = new FormStrategy(verify);
+
+    await strategy.authenticate(request, sessionStorage, {
+      sessionKey: "user",
+      context,
+    });
+
+    expect(verify).toBeCalledWith({ form: body, context });
+  });
 });
