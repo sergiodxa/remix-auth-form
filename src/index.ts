@@ -1,4 +1,4 @@
-import { SessionStorage } from "@remix-run/server-runtime";
+import { AppLoadContext, SessionStorage } from "@remix-run/server-runtime";
 import { AuthenticateOptions, Strategy } from "remix-auth";
 
 export interface FormStrategyVerifyParams {
@@ -9,6 +9,11 @@ export interface FormStrategyVerifyParams {
    * Here you can read any input value using the FormData API.
    */
   form: FormData;
+  /**
+   * An object of arbitrary for route loaders and actions provided by the
+   * server's `getLoadContext()` function.
+   */
+  context: AppLoadContext;
 }
 
 export class FormStrategy<User> extends Strategy<
@@ -26,7 +31,7 @@ export class FormStrategy<User> extends Strategy<
 
     let user: User;
     try {
-      user = await this.verify({ form });
+      user = await this.verify({ form, context: options.context });
     } catch (error) {
       let message = (error as Error).message;
       return await this.failure(message, request, sessionStorage, options);
