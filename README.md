@@ -11,7 +11,9 @@ A Remix Auth strategy to work with any form.
 
 ## How to use
 
-This Strategy gives you back on the verify callback the FormData instance of the request. This let you use any field from that form with the names you want, so you are not limited to only a username+password or email+password, if you need a third field you can use it.
+This Strategy gives you back on the verify callback the FormData instance of the request and the context from the action if it was was defined.
+
+This let you use any field from that form with the names you want, so you are not limited to only a username+password or email+password, if you need a third field you can use it.
 
 First, install the strategy and Remix Auth.
 
@@ -37,7 +39,9 @@ import { FormStrategy } from "remix-auth-form";
 // The rest of the code above here...
 
 authenticator.use(
-  new FormStrategy(async ({ form }) => {
+  new FormStrategy(async ({ form, context }) => {
+    // Here you can use `form` to access and input values from the form.
+    // and also use `context` to access more things from the server
     let username = form.get("username"); // or email... etc
     let password = form.get("password");
 
@@ -63,10 +67,11 @@ authenticator.use(
 In order to authenticate a user, you can use the following inside of an ActionFunction:
 
 ```ts
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request, context }) => {
   return await authenticator.authenticate("form", request, {
     successRedirect: "/",
     failureRedirect: "/login",
+    context, // optional
   });
 };
 ```
