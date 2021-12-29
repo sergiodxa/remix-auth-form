@@ -37,8 +37,8 @@ import { FormStrategy } from "remix-auth-form";
 // The rest of the code above here...
 
 authenticator.use(
-  new FormStrategy(({ form }) => {
-    let username = form.get("username");
+  new FormStrategy(async ({ form }) => {
+    let username = form.get("username"); // or email... etc
     let password = form.get("password");
 
     // You can validate the inputs however you want
@@ -58,4 +58,15 @@ authenticator.use(
     return user;
   })
 );
+```
+
+In order to authenticate a user, you can use the following inside of an ActionFunction:
+
+```ts
+export const action: ActionFunction = async ({ request }) => {
+  return await authenticator.authenticate("form", request, {
+    successRedirect: "/",
+    failureRedirect: "/login",
+  });
+};
 ```
