@@ -1,7 +1,7 @@
 import { AppLoadContext, SessionStorage } from "@remix-run/server-runtime";
 import { AuthenticateOptions, Strategy } from "remix-auth";
 
-export interface FormAuthenticateOptions extends AuthenticateOptions {
+export interface FormStrategyOptions {
   /**
    * The "Remember me" checkbox field name
    *
@@ -32,10 +32,23 @@ export class FormStrategy<User> extends Strategy<
 > {
   name = "form";
 
+  private rememberField: string;
+
+  constructor(
+		verify: StrategyVerifyCallback<
+			User,
+      FormStrategyVerifyParams
+		>,
+    options: FormStrategyOptions | undefined,
+	) {
+		super(verify, options);
+		this.rememberField = options?.rememberField;
+	}
+
   async authenticate(
     request: Request,
     sessionStorage: SessionStorage,
-    options: FormAuthenticateOptions
+    options: AuthenticateOptions
   ): Promise<User> {
     let form = await request.formData();
 
@@ -62,7 +75,7 @@ export class FormStrategy<User> extends Strategy<
     user: User,
     request: Request,
     sessionStorage: SessionStorage,
-    options: FormAuthenticateOptions
+    options: AuthenticateOptions
   ): Promise<User> {
     // if a successRedirect is not set, we return the user
     if (!options.successRedirect) return user;
@@ -73,7 +86,7 @@ export class FormStrategy<User> extends Strategy<
       
     let cookieOptions;
       
-    if(!!options.rememberField && !(await request.formData()).get(options.rememberField)) {
+    if(!!this.rememberField && !(await request.formData()).get(this.rememberField)) {
       cookieOptions = {
         expiry: new Date(Date.now()),
         maxAge: 0
