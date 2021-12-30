@@ -1,5 +1,4 @@
 import { AppLoadContext, SessionStorage } from "@remix-run/server-runtime";
-import { CookieSerializeOptions } from 'remix";
 import { AuthenticateOptions, Strategy } from "remix-auth";
 
 export interface FormAuthenticateOptions extends AuthenticateOptions {
@@ -72,11 +71,13 @@ export class FormStrategy<User> extends Strategy<
       request.headers.get("Cookie")
     );
       
-    let cookieOptions: CookieSerializeOptions = {}
+    let cookieOptions;
       
     if(!!options.rememberField && !(await request.formData()).get(options.rememberField)) {
-      cookieOptions.expiry = new Date(Date.now());
-      cookieOptions.maxAge = 0;
+      cookieOptions = {
+        expiry: new Date(Date.now()),
+        maxAge: 0
+      };
     }
 
     // if we do have a successRedirect, we redirect to it and set the user
