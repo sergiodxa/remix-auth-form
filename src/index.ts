@@ -35,15 +35,12 @@ export class FormStrategy<User> extends Strategy<
   private rememberField: string;
 
   constructor(
-		verify: StrategyVerifyCallback<
-			User,
-      FormStrategyVerifyParams
-		>,
-    options: FormStrategyOptions | undefined,
-	) {
-		super(verify, options);
-		this.rememberField = options?.rememberField;
-	}
+    verify: StrategyVerifyCallback<User, FormStrategyVerifyParams>,
+    options?: FormStrategyOptions,
+  ) {
+    super(verify, options);
+    this.rememberField = options?.rememberField;
+  }
 
   async authenticate(
     request: Request,
