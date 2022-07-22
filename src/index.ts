@@ -37,6 +37,10 @@ export class FormStrategy<User> extends Strategy<
       return await this.failure(message, request, sessionStorage, options);
     }
 
+    if (!user) {
+      return await this.failure("No user found", request, sessionStorage, options);
+    }
+
     return this.success(user, request, sessionStorage, options);
   }
 }
