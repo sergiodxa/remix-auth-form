@@ -75,3 +75,21 @@ export const action: ActionFunction = async ({ request, context }) => {
   });
 };
 ```
+
+## Passing a pre-read FormData object
+
+Because you may want to do validations or read valeus from the FormData before calling `authenticate`, the FormStrategy allows you to pass a FormData object as part of the optional context.
+
+```ts
+export const action: ActionFunction = async ({ request, context }) => {
+  let formData = await request.formData();
+  return await authenticator.authenticate("form", request, {
+    // use formData here
+    successRedirect: formData.get("redirectTo"),
+    failureRedirect: "/login",
+    context: { formData }, // pass pre-read formData here
+  });
+};
+```
+
+This way, you don't need to clone the request yourself.
