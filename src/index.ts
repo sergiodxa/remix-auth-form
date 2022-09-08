@@ -27,7 +27,7 @@ export class FormStrategy<User> extends Strategy<
     sessionStorage: SessionStorage,
     options: AuthenticateOptions
   ): Promise<User> {
-    let form = await request.formData();
+    let form = await this.readFormData(request, options);
 
     let user: User;
     try {
@@ -38,5 +38,13 @@ export class FormStrategy<User> extends Strategy<
     }
 
     return this.success(user, request, sessionStorage, options);
+  }
+
+  private async readFormData(request: Request, options: AuthenticateOptions) {
+    if (options.context?.formData instanceof FormData) {
+      return options.context.formData;
+    }
+
+    return await request.formData();
   }
 }
