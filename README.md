@@ -67,7 +67,7 @@ authenticator.use(
 In order to authenticate a user, you can use the following inside of an ActionFunction:
 
 ```ts
-export const action: ActionFunction = async ({ request, context }) => {
+export const action = async ({ context, request }: ActionArgs) => {
   return await authenticator.authenticate("form", request, {
     successRedirect: "/",
     failureRedirect: "/login",
@@ -81,7 +81,7 @@ export const action: ActionFunction = async ({ request, context }) => {
 Because you may want to do validations or read valeus from the FormData before calling `authenticate`, the FormStrategy allows you to pass a FormData object as part of the optional context.
 
 ```ts
-export const action: ActionFunction = async ({ request, context }) => {
+export const action = async ({ context, request }: ActionArgs) => {
   let formData = await request.formData();
   return await authenticator.authenticate("form", request, {
     // use formData here
