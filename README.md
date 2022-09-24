@@ -64,7 +64,7 @@ authenticator.use(
 );
 ```
 
-In order to authenticate a user, you can use the following inside of an ActionFunction:
+In order to authenticate a user, you can use the following inside of an `action` function:
 
 ```ts
 export const action = async ({ context, request }: ActionArgs) => {
