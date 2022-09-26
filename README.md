@@ -81,7 +81,7 @@ export async function action({ context, request }: ActionArgs) {
 Because you may want to do validations or read valeus from the FormData before calling `authenticate`, the FormStrategy allows you to pass a FormData object as part of the optional context.
 
 ```ts
-export async action function({ context, request }: ActionArgs) {
+export async function action({ context, request }: ActionArgs) {
   let formData = await request.formData();
   return await authenticator.authenticate("form", request, {
     // use formData here
