@@ -78,7 +78,7 @@ export async function action({ context, request }: ActionArgs) {
 
 ## Passing a pre-read FormData object
 
-Because you may want to do validations or read valeus from the FormData before calling `authenticate`, the FormStrategy allows you to pass a FormData object as part of the optional context.
+Because you may want to do validations or read values from the FormData before calling `authenticate`, the FormStrategy allows you to pass a FormData object as part of the optional context.
 
 ```ts
 export async function action({ context, request }: ActionArgs) {
