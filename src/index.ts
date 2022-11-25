@@ -29,15 +29,38 @@ export class FormStrategy<User> extends Strategy<
   ): Promise<User> {
     let form = await this.readFormData(request, options);
 
-    let user: User;
     try {
-      user = await this.verify({ form, context: options.context });
+      let user = await this.verify({ form, context: options.context });
+      return this.success(user, request, sessionStorage, options);
     } catch (error) {
-      let message = (error as Error).message;
-      return await this.failure(message, request, sessionStorage, options);
-    }
+      if (error instanceof Error) {
+        return await this.failure(
+          error.message,
+          request,
+          sessionStorage,
+          options,
+          error
+        );
+      }
 
-    return this.success(user, request, sessionStorage, options);
+      if (typeof error === "string") {
+        return await this.failure(
+          error,
+          request,
+          sessionStorage,
+          options,
+          new Error(error)
+        );
+      }
+
+      return await this.failure(
+        "Unknown error",
+        request,
+        sessionStorage,
+        options,
+        new Error(JSON.stringify(error, null, 2))
+      );
+    }
   }
 
   private async readFormData(request: Request, options: AuthenticateOptions) {
