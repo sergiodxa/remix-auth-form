@@ -11,7 +11,7 @@ A Remix Auth strategy to work with any form.
 
 ## How to use
 
-This Strategy gives you back on the verify callback the FormData instance of the request and the context from the action if it was was defined.
+This Strategy gives you back on the verify callback the FormData instance of the request and the context from the action if it was defined.
 
 This let you use any field from that form with the names you want, so you are not limited to only a username+password or email+password, if you need a third field you can use it.
 
