@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Type of version (major / minor / patch)'
+        description: "Type of version (major / minor / patch)"
         required: true
 
 jobs:
@@ -19,8 +19,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
       - name: Setup Git

@@ -25,7 +25,7 @@ export class FormStrategy<User> extends Strategy<
   async authenticate(
     request: Request,
     sessionStorage: SessionStorage,
-    options: AuthenticateOptions
+    options: AuthenticateOptions,
   ): Promise<User> {
     let form = await this.readFormData(request, options);
 
@@ -39,7 +39,7 @@ export class FormStrategy<User> extends Strategy<
           request,
           sessionStorage,
           options,
-          error
+          error,
         );
       }
 
@@ -49,7 +49,7 @@ export class FormStrategy<User> extends Strategy<
           request,
           sessionStorage,
           options,
-          new Error(error)
+          new Error(error),
         );
       }
 
@@ -58,7 +58,7 @@ export class FormStrategy<User> extends Strategy<
         request,
         sessionStorage,
         options,
-        new Error(JSON.stringify(error, null, 2))
+        new Error(JSON.stringify(error, null, 2)),
       );
     }
   }

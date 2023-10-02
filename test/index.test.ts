@@ -1,4 +1,4 @@
-import { createCookieSessionStorage } from "@remix-run/server-runtime";
+import { createCookieSessionStorage } from "@remix-run/node";
 import { AuthenticateOptions, AuthorizationError } from "remix-auth";
 import { FormStrategy, FormStrategyVerifyParams } from "../src";
 
@@ -29,7 +29,7 @@ describe(FormStrategy, () => {
     let body = new FormData();
     body.set("email", "test@example.com");
 
-    let request = new Request("", { body, method: "POST" });
+    let request = new Request("http://.../test", { body, method: "POST" });
 
     let strategy = new FormStrategy(verify);
 
@@ -42,20 +42,20 @@ describe(FormStrategy, () => {
     verify.mockImplementationOnce(
       async ({ form }: FormStrategyVerifyParams) => {
         return form.get("email");
-      }
+      },
     );
 
     let body = new FormData();
     body.set("email", "test@example.com");
 
-    let request = new Request("", { body, method: "POST" });
+    let request = new Request("http://.../test", { body, method: "POST" });
 
     let strategy = new FormStrategy<string>(verify);
 
     let user = await strategy.authenticate(
       request,
       sessionStorage,
-      BASE_OPTIONS
+      BASE_OPTIONS,
     );
 
     expect(user).toBe("test@example.com");
@@ -65,7 +65,7 @@ describe(FormStrategy, () => {
     let body = new FormData();
     body.set("email", "test@example.com");
 
-    let request = new Request("", { body, method: "POST" });
+    let request = new Request("http://.../test", { body, method: "POST" });
 
     let context = { test: "it works!" };
 
@@ -83,7 +83,7 @@ describe(FormStrategy, () => {
     let body = new FormData();
     body.set("email", "test@example.com");
 
-    let request = new Request("", { body, method: "POST" });
+    let request = new Request("http://.../test", { body, method: "POST" });
 
     let context = { formData: body };
 
@@ -95,7 +95,7 @@ describe(FormStrategy, () => {
       strategy.authenticate(request, sessionStorage, {
         ...BASE_OPTIONS,
         context,
-      })
+      }),
     ).resolves.toBe("test@example.com");
   });
 
@@ -103,7 +103,7 @@ describe(FormStrategy, () => {
     let body = new FormData();
     body.set("email", "test@example.com");
 
-    let request = new Request("", { body, method: "POST" });
+    let request = new Request("http://.../test", { body, method: "POST" });
 
     let context = { formData: { email: "fake@example.com" } };
 
@@ -115,7 +115,7 @@ describe(FormStrategy, () => {
       strategy.authenticate(request, sessionStorage, {
         ...BASE_OPTIONS,
         context,
-      })
+      }),
     ).resolves.toBe("test@example.com");
   });
 
@@ -127,7 +127,7 @@ describe(FormStrategy, () => {
     let body = new FormData();
     body.set("email", "test@example.com");
 
-    let request = new Request("", { body, method: "POST" });
+    let request = new Request("http://.../test", { body, method: "POST" });
 
     let strategy = new FormStrategy(verify);
 
@@ -140,7 +140,7 @@ describe(FormStrategy, () => {
 
     expect(result).toEqual(new AuthorizationError("Invalid email address"));
     expect((result as AuthorizationError).cause).toEqual(
-      new TypeError("Invalid email address")
+      new TypeError("Invalid email address"),
     );
   });
 
@@ -152,7 +152,7 @@ describe(FormStrategy, () => {
     let body = new FormData();
     body.set("email", "test@example.com");
 
-    let request = new Request("", { body, method: "POST" });
+    let request = new Request("http://.../test", { body, method: "POST" });
 
     let strategy = new FormStrategy(verify);
 
@@ -165,7 +165,7 @@ describe(FormStrategy, () => {
 
     expect(result).toEqual(new AuthorizationError("Invalid email address"));
     expect((result as AuthorizationError).cause).toEqual(
-      new TypeError("Invalid email address")
+      new TypeError("Invalid email address"),
     );
   });
 
@@ -177,7 +177,7 @@ describe(FormStrategy, () => {
     let body = new FormData();
     body.set("email", "test@example.com");
 
-    let request = new Request("", { body, method: "POST" });
+    let request = new Request("http://.../test", { body, method: "POST" });
 
     let strategy = new FormStrategy(verify);
 
@@ -190,7 +190,7 @@ describe(FormStrategy, () => {
 
     expect(result).toEqual(new AuthorizationError("Unknown error"));
     expect((result as AuthorizationError).cause).toEqual(
-      new Error(JSON.stringify({ message: "Invalid email address" }, null, 2))
+      new Error(JSON.stringify({ message: "Invalid email address" }, null, 2)),
     );
   });
 });
