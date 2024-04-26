@@ -8,8 +8,9 @@
 		"prepare": "bun run build",
 		"build": "tsc --project tsconfig.json",
 		"typecheck": "tsc --project tsconfig.json --noEmit",
-		"lint": "eslint --ext .ts,.tsx src/",
-		"format": "prettier --write ."
+		"check": "biome check .",
+		"lint": "biome lint --apply ./src",
+		"format": "biome format --write ./src/index.ts"
 	},
 	"keywords": [
 		"remix",
