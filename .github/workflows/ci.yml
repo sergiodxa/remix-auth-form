@@ -21,6 +21,15 @@ jobs:
       - run: bun install
       - run: bun run typecheck
 
+  biome:
+    name: Biome
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - run: bun install
+      - run: bun run ci
+
   format:
     name: Formatter
     runs-on: ubuntu-latest
