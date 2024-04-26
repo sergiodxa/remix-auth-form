@@ -2,76 +2,76 @@ import { AppLoadContext, SessionStorage } from "@remix-run/server-runtime";
 import { AuthenticateOptions, Strategy } from "remix-auth";
 
 export interface FormStrategyVerifyParams {
-  /**
-   * A FormData object with the content of the form used to trigger the
-   * authentication.
-   *
-   * Here you can read any input value using the FormData API.
-   */
-  form: FormData;
-  /**
-   * An object of arbitrary for route loaders and actions provided by the
-   * server's `getLoadContext()` function.
-   */
-  context?: AppLoadContext;
-  /**
-   * The request that triggered the authentication.
-   */
-  request: Request;
+	/**
+	 * A FormData object with the content of the form used to trigger the
+	 * authentication.
+	 *
+	 * Here you can read any input value using the FormData API.
+	 */
+	form: FormData;
+	/**
+	 * An object of arbitrary for route loaders and actions provided by the
+	 * server's `getLoadContext()` function.
+	 */
+	context?: AppLoadContext;
+	/**
+	 * The request that triggered the authentication.
+	 */
+	request: Request;
 }
 
 export class FormStrategy<User> extends Strategy<
-  User,
-  FormStrategyVerifyParams
+	User,
+	FormStrategyVerifyParams
 > {
-  name = "form";
+	name = "form";
 
-  async authenticate(
-    request: Request,
-    sessionStorage: SessionStorage,
-    options: AuthenticateOptions,
-  ): Promise<User> {
-    let form = await this.readFormData(request, options);
+	async authenticate(
+		request: Request,
+		sessionStorage: SessionStorage,
+		options: AuthenticateOptions,
+	): Promise<User> {
+		let form = await this.readFormData(request, options);
 
-    try {
-      let user = await this.verify({ form, context: options.context, request });
-      return this.success(user, request, sessionStorage, options);
-    } catch (error) {
-      if (error instanceof Error) {
-        return await this.failure(
-          error.message,
-          request,
-          sessionStorage,
-          options,
-          error,
-        );
-      }
+		try {
+			let user = await this.verify({ form, context: options.context, request });
+			return this.success(user, request, sessionStorage, options);
+		} catch (error) {
+			if (error instanceof Error) {
+				return await this.failure(
+					error.message,
+					request,
+					sessionStorage,
+					options,
+					error,
+				);
+			}
 
-      if (typeof error === "string") {
-        return await this.failure(
-          error,
-          request,
-          sessionStorage,
-          options,
-          new Error(error),
-        );
-      }
+			if (typeof error === "string") {
+				return await this.failure(
+					error,
+					request,
+					sessionStorage,
+					options,
+					new Error(error),
+				);
+			}
 
-      return await this.failure(
-        "Unknown error",
-        request,
-        sessionStorage,
-        options,
-        new Error(JSON.stringify(error, null, 2)),
-      );
-    }
-  }
+			return await this.failure(
+				"Unknown error",
+				request,
+				sessionStorage,
+				options,
+				new Error(JSON.stringify(error, null, 2)),
+			);
+		}
+	}
 
-  private async readFormData(request: Request, options: AuthenticateOptions) {
-    if (options.context?.formData instanceof FormData) {
-      return options.context.formData;
-    }
+	private async readFormData(request: Request, options: AuthenticateOptions) {
+		if (options.context?.formData instanceof FormData) {
+			return options.context.formData;
+		}
 
-    return await request.formData();
-  }
+		return await request.formData();
+	}
 }
