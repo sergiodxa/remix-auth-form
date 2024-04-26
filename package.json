@@ -29,6 +29,7 @@
 		"remix-auth": "^3.6.0"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "^1.7.1",
 		"@remix-run/node": "2.9.1",
 		"@remix-run/server-runtime": "2.9.1",
 		"@types/bun": "^1.1.0",
