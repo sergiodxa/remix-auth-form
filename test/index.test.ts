@@ -35,7 +35,7 @@ describe(FormStrategy, () => {
 
     await strategy.authenticate(request, sessionStorage, BASE_OPTIONS);
 
-    expect(verify).toBeCalledWith({ form: body });
+    expect(verify).toBeCalledWith({ form: body, request });
   });
 
   test("should return what the verify callback returned", async () => {
@@ -76,7 +76,7 @@ describe(FormStrategy, () => {
       context,
     });
 
-    expect(verify).toBeCalledWith({ form: body, context });
+    expect(verify).toBeCalledWith({ form: body, context, request });
   });
 
   test("should prefer context.formData over request.formData()", async () => {

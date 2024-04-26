@@ -14,6 +14,10 @@ export interface FormStrategyVerifyParams {
    * server's `getLoadContext()` function.
    */
   context?: AppLoadContext;
+  /**
+   * The request that triggered the authentication.
+   */
+  request: Request;
 }
 
 export class FormStrategy<User> extends Strategy<
@@ -30,7 +34,7 @@ export class FormStrategy<User> extends Strategy<
     let form = await this.readFormData(request, options);
 
     try {
-      let user = await this.verify({ form, context: options.context });
+      let user = await this.verify({ form, context: options.context, request });
       return this.success(user, request, sessionStorage, options);
     } catch (error) {
       if (error instanceof Error) {
