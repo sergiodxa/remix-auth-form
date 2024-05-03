@@ -4,6 +4,7 @@
 	"main": "./build/index.js",
 	"types": "./build/index.d.ts",
 	"type": "commonjs",
+	"funding": ["https://github.com/sponsors/sergiodxa"],
 	"scripts": {
 		"prepare": "bun run build",
 		"build": "tsc --project tsconfig.json",
