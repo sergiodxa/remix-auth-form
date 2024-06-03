@@ -1,4 +1,4 @@
-import { AppLoadContext, SessionStorage } from "@remix-run/server-runtime";
+import type { AppLoadContext, SessionStorage } from "@remix-run/server-runtime";
 import { AuthenticateOptions, Strategy } from "remix-auth";
 
 export interface FormStrategyVerifyParams {

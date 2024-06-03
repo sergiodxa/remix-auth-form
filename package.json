@@ -1,31 +1,51 @@
 {
 	"name": "remix-auth-form",
 	"version": "1.5.0",
-	"main": "./build/index.js",
-	"types": "./build/index.d.ts",
-	"type": "commonjs",
-	"funding": ["https://github.com/sponsors/sergiodxa"],
-	"scripts": {
-		"prepare": "bun run build",
-		"build": "tsc --project tsconfig.json",
-		"typecheck": "tsc --project tsconfig.json --noEmit",
-		"check": "biome check .",
-		"lint": "biome lint --apply .",
-		"format": "biome format --write ."
-	},
-	"keywords": ["remix", "remix-auth", "auth", "authentication", "strategy"],
+	"description": "A Remix Auth strategy to work with any form",
 	"license": "MIT",
+	"funding": ["https://github.com/sponsors/sergiodxa"],
+	"author": {
+		"name": "Sergio Xalambrí",
+		"email": "hello+oss@sergiodxa.com",
+		"url": "https://sergiodxa.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/sergiodxa/remix-auth-form"
+	},
+	"homepage": "https://sergiodxa.github.io/remix-auth-form",
+	"bugs": {
+		"url": "https://github.com/sergiodxa/remix-auth-form/issues"
+	},
+	"scripts": {
+		"build": "tsc",
+		"typecheck": "tsc --noEmit",
+		"quality": "biome check .",
+		"quality:fix": "biome check . --apply-unsafe",
+		"exports": "bun run ./scripts/exports.ts"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"engines": {
+		"node": ">=20.0.0"
+	},
 	"files": ["build", "package.json", "README.md"],
+	"exports": {
+		".": "./build/index.js",
+		"./package.json": "./package.json"
+	},
 	"peerDependencies": {
 		"@remix-run/server-runtime": "^1.0.0 || ^2.0.0",
 		"remix-auth": "^3.6.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.7.1",
-		"@remix-run/node": "2.9.1",
-		"@remix-run/server-runtime": "2.9.1",
-		"@types/bun": "^1.1.0",
-		"remix-auth": "3.6.0",
-		"typescript": "5.4.5"
+		"@arethetypeswrong/cli": "^0.15.3",
+		"@biomejs/biome": "^1.7.2",
+		"@types/bun": "^1.1.1",
+		"consola": "^3.2.3",
+		"remix-auth": "^3.7.0",
+		"typedoc": "^0.25.13",
+		"typedoc-plugin-mdn-links": "^3.1.23",
+		"typescript": "^5.4.5"
 	}
 }
