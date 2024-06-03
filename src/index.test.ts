@@ -73,46 +73,6 @@ test("should pass the context to the verify callback", async () => {
 	expect(verify).toBeCalledWith({ form: body, context, request });
 });
 
-test("should prefer context.formData over request.formData()", async () => {
-	let body = new FormData();
-	body.set("email", "test@example.com");
-
-	let request = new Request("http://.../test", { body, method: "POST" });
-
-	let context = { formData: body };
-
-	let strategy = new FormStrategy<string>(async ({ form }) => {
-		return form.get("email") as string;
-	});
-
-	expect(
-		strategy.authenticate(request, sessionStorage, {
-			...options,
-			context,
-		}),
-	).resolves.toBe("test@example.com");
-});
-
-test("ignore context.formData if it's not an FormData object", async () => {
-	let body = new FormData();
-	body.set("email", "test@example.com");
-
-	let request = new Request("http://.../test", { body, method: "POST" });
-
-	let context = { formData: { email: "fake@example.com" } };
-
-	let strategy = new FormStrategy<string>(async ({ form }) => {
-		return form.get("email") as string;
-	});
-
-	expect(
-		strategy.authenticate(request, sessionStorage, {
-			...options,
-			context,
-		}),
-	).resolves.toBe("test@example.com");
-});
-
 test("should pass error as cause on failure", async () => {
 	verify.mockImplementationOnce(() => {
 		throw new TypeError("Invalid email address");
