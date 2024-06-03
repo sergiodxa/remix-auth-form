@@ -3,13 +3,22 @@ name: CI
 on: [push]
 
 jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+
   typecheck:
     name: Typechecker
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
-      - run: bun install
+      - run: bun install --frozen-lockfile
       - run: bun run typecheck
 
   quality:
@@ -18,8 +27,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
-      - run: bun install
-      - run: bunx biome ci .
+      - run: bun install --frozen-lockfile
+      - run: bun run quality
 
   test:
     name: Tests
@@ -27,5 +36,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
-      - run: bun install
+      - run: bun install --frozen-lockfile
       - run: bun test
+
+  exports:
+    name: Verify Exports
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - run: bun install --frozen-lockfile
+      - run: bun run exports

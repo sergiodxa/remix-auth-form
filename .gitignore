@@ -1,6 +1,4 @@
-/node_modules
 /build
 /coverage
-
-*.log
-.DS_Store
+/docs
+/node_modules
