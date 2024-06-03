@@ -31,9 +31,8 @@ export class FormStrategy<User> extends Strategy<
 		sessionStorage: SessionStorage,
 		options: AuthenticateOptions,
 	): Promise<User> {
-		let form = await this.readFormData(request, options);
-
 		try {
+			let form = await this.readFormData(request, options);
 			let user = await this.verify({ form, context: options.context, request });
 			return this.success(user, request, sessionStorage, options);
 		} catch (error) {
