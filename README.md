@@ -68,10 +68,19 @@ In order to authenticate a user, you can use the following inside of an `action`
 
 ```ts
 export async function action({ context, request }: ActionArgs) {
-  return await authenticator.authenticate("form", request, {
-    successRedirect: "/",
-    failureRedirect: "/login",
-    context, // optional
-  });
+  try {
+    return await authenticator.authenticate("form", request, {
+      successRedirect: "/",
+      failureRedirect: "/login",
+      context, // optional
+    });
+  } catch (err) {
+    // You need this to trigger successRedirect
+    if (err instanceof Response) {
+      throw err;
+    }
+  
+    // return errors
+  }
 }
 ```
