@@ -35,16 +35,14 @@
 		"./package.json": "./package.json"
 	},
 	"peerDependencies": {
-		"@remix-run/server-runtime": "^1.0.0 || ^2.0.0",
-		"remix-auth": "^3.6.0"
+		"remix-auth": "^4.0.0"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "^0.15.3",
 		"@biomejs/biome": "^1.7.2",
-		"@remix-run/node": "^2.9.2",
 		"@types/bun": "^1.1.1",
 		"consola": "^3.2.3",
-		"remix-auth": "^3.7.0",
+		"remix-auth": "^4.0.0",
 		"typedoc": "^0.25.13",
 		"typedoc-plugin-mdn-links": "^3.1.23",
 		"typescript": "^5.4.5"

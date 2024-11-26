@@ -1,5 +1,4 @@
-import type { AppLoadContext, SessionStorage } from "@remix-run/server-runtime";
-import { AuthenticateOptions, Strategy } from "remix-auth";
+import { Strategy } from "remix-auth/strategy";
 
 export interface FormStrategyVerifyParams {
 	/**
@@ -9,11 +8,6 @@ export interface FormStrategyVerifyParams {
 	 * Here you can read any input value using the FormData API.
 	 */
 	form: FormData;
-	/**
-	 * An object of arbitrary for route loaders and actions provided by the
-	 * server's `getLoadContext()` function.
-	 */
-	context?: AppLoadContext;
 	/**
 	 * The request that triggered the authentication.
 	 */
@@ -26,44 +20,25 @@ export class FormStrategy<User> extends Strategy<
 > {
 	name = "form";
 
-	async authenticate(
-		request: Request,
-		sessionStorage: SessionStorage,
-		options: AuthenticateOptions,
-	): Promise<User> {
+	async authenticate(request: Request): Promise<User> {
 		try {
 			if (request.bodyUsed) throw new BodyUsedError();
 			let form = await request.clone().formData();
-			let user = await this.verify({ form, context: options.context, request });
-			return this.success(user, request, sessionStorage, options);
+			return this.verify({ form, request });
 		} catch (error) {
 			if (error instanceof Error) {
-				return await this.failure(
-					error.message,
-					request,
-					sessionStorage,
-					options,
-					error,
-				);
+				throw new Error(error.message, {
+					cause: error,
+				});
 			}
 
 			if (typeof error === "string") {
-				return await this.failure(
-					error,
-					request,
-					sessionStorage,
-					options,
-					new Error(error),
-				);
+				throw new Error(error, { cause: new Error(error) });
 			}
 
-			return await this.failure(
-				"Unknown error",
-				request,
-				sessionStorage,
-				options,
-				new Error(JSON.stringify(error, null, 2)),
-			);
+			throw new Error("Unknown error", {
+				cause: new Error(JSON.stringify(error, null, 2)),
+			});
 		}
 	}
 }
