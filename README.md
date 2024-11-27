@@ -25,7 +25,6 @@ Then, create an Authenticator instance.
 
 ```ts
 import { Authenticator } from "remix-auth";
-import { sessionStorage } from "~/services/session.server";
 import { User, findOrCreateUser } from "~/models/user";
 
 export let authenticator = new Authenticator<User>();
