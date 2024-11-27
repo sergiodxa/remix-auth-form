@@ -1,45 +1,15 @@
 import { Strategy } from "remix-auth/strategy";
 
-export interface FormStrategyVerifyParams {
-	/**
-	 * A FormData object with the content of the form used to trigger the
-	 * authentication.
-	 *
-	 * Here you can read any input value using the FormData API.
-	 */
-	form: FormData;
-	/**
-	 * The request that triggered the authentication.
-	 */
-	request: Request;
-}
-
 export class FormStrategy<User> extends Strategy<
 	User,
-	FormStrategyVerifyParams
+	FormStrategy.VerifyOptions
 > {
 	name = "form";
 
 	async authenticate(request: Request): Promise<User> {
-		try {
-			if (request.bodyUsed) throw new BodyUsedError();
-			let form = await request.clone().formData();
-			return this.verify({ form, request });
-		} catch (error) {
-			if (error instanceof Error) {
-				throw new Error(error.message, {
-					cause: error,
-				});
-			}
-
-			if (typeof error === "string") {
-				throw new Error(error, { cause: new Error(error) });
-			}
-
-			throw new Error("Unknown error", {
-				cause: new Error(JSON.stringify(error, null, 2)),
-			});
-		}
+		if (request.bodyUsed) throw new BodyUsedError();
+		let form = await request.clone().formData();
+		return this.verify({ form, request });
 	}
 }
 
@@ -71,5 +41,21 @@ export class BodyUsedError extends Error {
 		super(
 			"Your request.body was already used. This means you called `request.formData()` or another way to read the body before using the Remix Auth's FormStrategy. Because FormStrategy needs to read the body, ensure that you either don't read it yourself by moving your logic to the strategy callback or clone the request before reading the body with `request.clone().formData()`.",
 		);
+	}
+}
+
+export namespace FormStrategy {
+	export interface VerifyOptions {
+		/**
+		 * A FormData object with the content of the form used to trigger the
+		 * authentication.
+		 *
+		 * Here you can read any input value using the FormData API.
+		 */
+		form: FormData;
+		/**
+		 * The request that triggered the authentication.
+		 */
+		request: Request;
 	}
 }
