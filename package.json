@@ -38,13 +38,13 @@
 		"remix-auth": "^4.0.0"
 	},
 	"devDependencies": {
-		"@arethetypeswrong/cli": "^0.15.3",
-		"@biomejs/biome": "^1.7.2",
-		"@types/bun": "^1.1.1",
+		"@arethetypeswrong/cli": "^0.17.0",
+		"@biomejs/biome": "^1.9.4",
+		"@types/bun": "^1.1.14",
 		"consola": "^3.2.3",
 		"remix-auth": "^4.0.0",
-		"typedoc": "^0.25.13",
-		"typedoc-plugin-mdn-links": "^3.1.23",
-		"typescript": "^5.4.5"
+		"typedoc": "^0.27.0",
+		"typedoc-plugin-mdn-links": "^4.0.1",
+		"typescript": "^5.7.2"
 	}
 }
