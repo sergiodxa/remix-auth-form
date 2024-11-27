@@ -1,5 +1,5 @@
 import { beforeEach, expect, mock, test } from "bun:test";
-import { FormStrategy, FormStrategyVerifyParams } from ".";
+import { FormStrategy } from ".";
 
 let verify = mock();
 
@@ -7,12 +7,12 @@ beforeEach(() => {
 	verify.mockReset();
 });
 
-test("should have the name of the strategy", () => {
+test("has the name of the strategy", () => {
 	let strategy = new FormStrategy(verify);
 	expect(strategy.name).toBe("form");
 });
 
-test("should pass to the verify callback a FormData object", async () => {
+test("pass to the verify function a FormData object", async () => {
 	let body = new FormData();
 	body.set("email", "test@example.com");
 
@@ -25,10 +25,12 @@ test("should pass to the verify callback a FormData object", async () => {
 	expect(verify).toBeCalledWith({ form: body, request });
 });
 
-test("should return what the verify callback returned", async () => {
-	verify.mockImplementationOnce(async ({ form }: FormStrategyVerifyParams) => {
-		return form.get("email");
-	});
+test("returns what the verify function returned", async () => {
+	verify.mockImplementationOnce(
+		async ({ form }: FormStrategy.VerifyOptions) => {
+			return form.get("email");
+		},
+	);
 
 	let body = new FormData();
 	body.set("email", "test@example.com");
@@ -42,7 +44,7 @@ test("should return what the verify callback returned", async () => {
 	expect(user).toBe("test@example.com");
 });
 
-test("should pass error as cause on failure", async () => {
+test("thrown error passthrough the strategy", async () => {
 	verify.mockImplementationOnce(() => {
 		throw new TypeError("Invalid email address");
 	});
@@ -54,51 +56,7 @@ test("should pass error as cause on failure", async () => {
 
 	let strategy = new FormStrategy(verify);
 
-	let result = await strategy.authenticate(request).catch((error) => error);
-
-	expect(result).toEqual(new Error("Invalid email address"));
-	expect((result as Error).cause).toEqual(
+	expect(strategy.authenticate(request)).rejects.toThrow(
 		new TypeError("Invalid email address"),
-	);
-});
-
-test("should pass generate error from string on failure", async () => {
-	verify.mockImplementationOnce(() => {
-		throw "Invalid email address";
-	});
-
-	let body = new FormData();
-	body.set("email", "test@example.com");
-
-	let request = new Request("http://example.com/test", {
-		body,
-		method: "POST",
-	});
-
-	let strategy = new FormStrategy(verify);
-
-	let result = await strategy.authenticate(request).catch((error) => error);
-
-	expect(result).toEqual(new Error("Invalid email address"));
-	expect((result as Error).cause).toEqual(new Error("Invalid email address"));
-});
-
-test("should create Unknown error if thrown value is not Error or string", async () => {
-	verify.mockImplementationOnce(() => {
-		throw { message: "Invalid email address" };
-	});
-
-	let body = new FormData();
-	body.set("email", "test@example.com");
-
-	let request = new Request("http://.../test", { body, method: "POST" });
-
-	let strategy = new FormStrategy(verify);
-
-	let result = await strategy.authenticate(request).catch((error) => error);
-
-	expect(result).toEqual(new Error("Unknown error"));
-	expect((result as Error).cause).toEqual(
-		new Error(JSON.stringify({ message: "Invalid email address" }, null, 2)),
 	);
 });
