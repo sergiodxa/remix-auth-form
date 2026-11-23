@@ -35,14 +35,14 @@
 		"./package.json": "./package.json"
 	},
 	"peerDependencies": {
-		"remix-auth": "^4.0.0"
+		"remix-auth": "^5.0.0"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "^0.18.1",
 		"@biomejs/biome": "^2.0.4",
 		"@types/bun": "^1.1.14",
 		"consola": "^3.2.3",
-		"remix-auth": "^4.0.0",
+		"remix-auth": "^5.0.0",
 		"typedoc": "^0.28.0",
 		"typedoc-plugin-mdn-links": "^5.0.1",
 		"typescript": "^7.0.2"
